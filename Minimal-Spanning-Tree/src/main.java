@@ -6,7 +6,7 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 public class main {
-	
+
 	public static void main(String[] args) {
 		TreeSet<Edge> edges = new TreeSet<Edge>();
 		Edge e1 = new Edge("A", "B", 2);
@@ -58,12 +58,54 @@ class Edge implements Comparable<Edge> {
 
 class KruskalAlgo {
 	TreeSet<Edge> edges;
+	TreeSet<Edge> kruskalResult;
 	ArrayList<HashSet<String>> groups;
-	
-	public KruskalAlgo(TreeSet<Edge> edges){
+
+	public KruskalAlgo(TreeSet<Edge> edges) {
 		this.edges = edges;
 		groups = new ArrayList<HashSet<String>>(); // Annat än arrayList?
-		
+		runKruskal();
+	}
+
+	private void runKruskal() {
+		for (Edge e : edges) {
+			addEdge(e);
+		}
+
+	}
+
+	private void addEdge(Edge e) {
+		String cityA = e.cityA;
+		String cityB = e.cityB;
+
+		// Check if city A and B are already in a group
+		HashSet<String> groupA = isInGroup(cityA);
+		HashSet<String> groupB = isInGroup(cityB);
+
+		//Do something depending of result from above
+		if (groupA == null && groupB == null) {
+			kruskalResult.add(e);
+			HashSet<String> newGroup = new HashSet<String>();
+			newGroup.add(cityA);
+			newGroup.add(cityB);
+			groups.add(newGroup);
+		} else if (groupA == null && groupB != null) {
+			
+		} else if (groupA != null && groupB == null){
+			
+		} else if (groupA != null && groupB != null){
+			
+		}
+
+	}
+
+	private HashSet<String> isInGroup(String cityA) {
+		for (HashSet<String> hs : groups) {
+			if (hs.contains(cityA)) {
+				return hs;
+			}
+		}
+		return null;
 	}
 
 	public String getResult() {
