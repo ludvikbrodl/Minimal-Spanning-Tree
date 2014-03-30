@@ -6,16 +6,18 @@ public class main {
 
 	public static void main(String[] args) {
 		TreeSet<Edge> edges = new TreeSet<Edge>();
-		Edge e1 = new Edge("A", "B", 2);
-		Edge e2 = new Edge("A", "C", 1);
-		Edge e3 = new Edge("B", "D", 3);
-		Edge e4 = new Edge("C", "D", 4);
+		Edge e1 = new Edge("A", "F", 2);
+		Edge e2 = new Edge("A", "B", 4);
+		Edge e3 = new Edge("B", "F", 5);
+		Edge e4 = new Edge("B", "C", 6);
+		Edge e5 = new Edge("C", "F", 1);
 
 		edges = new TreeSet<Edge>();
 		edges.add(e1);
 		edges.add(e2);
 		edges.add(e3);
 		edges.add(e4);
+		edges.add(e5);
 		System.out.println(edges);
 		KruskalAlgo result = new KruskalAlgo(edges);
 		TreeSet<Edge> msp = result.getMinimalSpanningTree();
@@ -65,6 +67,7 @@ class KruskalAlgo {
 
 	public KruskalAlgo(TreeSet<Edge> edges) {
 		this.edges = edges;
+		kruskalResult = new TreeSet<Edge>();
 		groups = new ArrayList<HashSet<String>>(); // Annat än arrayList?
 		runKruskal();
 	}
@@ -98,7 +101,7 @@ class KruskalAlgo {
 			kruskalResult.add(e);
 			groupA.add(cityB);
 		} else if (groupA != null && groupB != null) {
-			if (groupA != groupB) { // Both are in groups, and not the same =>
+			if (!groupA.equals(groupB)) { // Both are in groups, and not the same =>
 									// they should be added to the same group
 				groupA.addAll(groupB);
 				groups.remove(groupB);
@@ -119,6 +122,6 @@ class KruskalAlgo {
 	}
 
 	public TreeSet<Edge> getMinimalSpanningTree() {
-		return edges;
+		return kruskalResult;
 	}
 }
