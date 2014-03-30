@@ -1,9 +1,6 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.TreeSet;
-import java.util.Vector;
 
 public class main {
 
@@ -21,7 +18,12 @@ public class main {
 		edges.add(e4);
 		System.out.println(edges);
 		KruskalAlgo result = new KruskalAlgo(edges);
-		System.out.println(result.getResult());
+		TreeSet<Edge> msp = result.getMinimalSpanningTree();
+		int totalWeight = 0;
+		for (Edge e : msp) {
+			totalWeight += e.weight;
+		}
+		System.out.println(totalWeight);
 
 	}
 
@@ -82,7 +84,7 @@ class KruskalAlgo {
 		HashSet<String> groupA = isInGroup(cityA);
 		HashSet<String> groupB = isInGroup(cityB);
 
-		//Do something depending of result from above
+		// Do something depending of result from above
 		if (groupA == null && groupB == null) {
 			kruskalResult.add(e);
 			HashSet<String> newGroup = new HashSet<String>();
@@ -90,13 +92,21 @@ class KruskalAlgo {
 			newGroup.add(cityB);
 			groups.add(newGroup);
 		} else if (groupA == null && groupB != null) {
-			
-		} else if (groupA != null && groupB == null){
-			
-		} else if (groupA != null && groupB != null){
-			
+			kruskalResult.add(e);
+			groupB.add(cityA);
+		} else if (groupA != null && groupB == null) {
+			kruskalResult.add(e);
+			groupA.add(cityB);
+		} else if (groupA != null && groupB != null) {
+			if (groupA != groupB) { // Both are in groups, and not the same =>
+									// they should be added to the same group
+				groupA.addAll(groupB);
+				groups.remove(groupB);
+				kruskalResult.add(e);
+			} else {
+				// if both are the same, are we done????
+			}
 		}
-
 	}
 
 	private HashSet<String> isInGroup(String cityA) {
@@ -108,9 +118,7 @@ class KruskalAlgo {
 		return null;
 	}
 
-	public String getResult() {
-		// TODO Auto-generated method stub
-		return null;
+	public TreeSet<Edge> getMinimalSpanningTree() {
+		return edges;
 	}
 }
-
