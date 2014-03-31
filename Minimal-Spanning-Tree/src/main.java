@@ -1,24 +1,31 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.TreeSet;
 
 public class main {
 
-	public static void main(String[] args) {
-		TreeSet<Edge> edges = new TreeSet<Edge>();
-		Edge e1 = new Edge("A", "F", 2);
-		Edge e2 = new Edge("A", "B", 4);
-		Edge e3 = new Edge("B", "F", 5);
-		Edge e4 = new Edge("B", "C", 6);
-		Edge e5 = new Edge("C", "F", 1);
+	private static TreeSet<Edge> edges;
 
+	public static void main(String[] args) throws IOException {
 		edges = new TreeSet<Edge>();
-		edges.add(e1);
-		edges.add(e2);
-		edges.add(e3);
-		edges.add(e4);
-		edges.add(e5);
-		System.out.println(edges);
+//		Edge e1 = new Edge("A", "F", 2);
+//		Edge e2 = new Edge("A", "B", 4);
+//		Edge e3 = new Edge("B", "F", 5);
+//		Edge e4 = new Edge("B", "C", 6);
+//		Edge e5 = new Edge("C", "F", 1);
+//
+//		edges = new TreeSet<Edge>();
+//		edges.add(e1);
+//		edges.add(e2);
+//		edges.add(e3);
+//		edges.add(e4);
+//		edges.add(e5);
+//		System.out.println(edges);
+		parse(args);
 		KruskalAlgo result = new KruskalAlgo(edges);
 		TreeSet<Edge> msp = result.getMinimalSpanningTree();
 		int totalWeight = 0;
@@ -27,6 +34,22 @@ public class main {
 		}
 		System.out.println(totalWeight);
 
+	}
+
+	// Syracuse--"Springfield, MO" [1114]
+	private static void parse(String[] args) throws IOException {
+		FileReader fr = new FileReader(args[0]);
+		BufferedReader br = new BufferedReader(fr);
+		while (br.ready()) {
+			String line = br.readLine();
+			if (line.endsWith("]")) {
+				String[] split = line.split("--");
+				int blockStart = split[1].indexOf("[");
+				int weight = Integer.parseInt(split[1].substring(blockStart+1, split[1].length()-1));
+				split[1] = split[1].substring(0, blockStart - 1); // = toName
+				edges.add(new Edge(split[0], split[1], weight));
+			}
+		}
 	}
 
 }
