@@ -1,44 +1,45 @@
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.TreeSet;
 
 public class main {
+	static ArrayList<Edge> edges = new ArrayList<Edge>();
 
 	public static void main(String[] args) throws IOException {
-		ArrayList<Edge> edges = new ArrayList<Edge>();
-//		TreeSet<Edge> edges = new TreeSet<Edge>();
-		edges.add(new Edge("a","b",6));
-		edges.add(new Edge("a","d",3));
-		edges.add(new Edge("a","e",9));
-		edges.add(new Edge("b","d",4));
-		edges.add(new Edge("b","c",2));
-		edges.add(new Edge("b","g",9));
-		edges.add(new Edge("c","d",2));
-		edges.add(new Edge("c","g",9));
-		edges.add(new Edge("d","e",9));
-		edges.add(new Edge("d","f",9));
-		edges.add(new Edge("e","f",8));
-		edges.add(new Edge("g","f",7));
-		edges.add(new Edge("g","j",4));
-		edges.add(new Edge("g","h",5));
-		edges.add(new Edge("h","f",9));
-		edges.add(new Edge("j","h",1));
-		edges.add(new Edge("j","i",4));
-		edges.add(new Edge("h","i",3));
-		edges.add(new Edge("f","i",10));
-		edges.add(new Edge("i","e",18));
-		edges.add(new Edge("c","f",8));
+
+		// TreeSet<Edge> edges = new TreeSet<Edge>();
+		// edges.add(new Edge("a","b",6));
+		// edges.add(new Edge("a","d",3));
+		// edges.add(new Edge("a","e",9));
+		// edges.add(new Edge("b","d",4));
+		// edges.add(new Edge("b","c",2));
+		// edges.add(new Edge("b","g",9));
+		// edges.add(new Edge("c","d",2));
+		// edges.add(new Edge("c","g",9));
+		// edges.add(new Edge("d","e",9));
+		// edges.add(new Edge("d","f",9));
+		// edges.add(new Edge("e","f",8));
+		// edges.add(new Edge("g","f",7));
+		// edges.add(new Edge("g","j",4));
+		// edges.add(new Edge("g","h",5));
+		// edges.add(new Edge("h","f",9));
+		// edges.add(new Edge("j","h",1));
+		// edges.add(new Edge("j","i",4));
+		// edges.add(new Edge("h","i",3));
+		// edges.add(new Edge("f","i",10));
+		// edges.add(new Edge("i","e",18));
+		// edges.add(new Edge("c","f",8));
+		Long start = System.currentTimeMillis();
+		
+		parse(args);
+		long parsDone = System.currentTimeMillis();
 		Collections.sort(edges);
 
-
-
-
 		System.out.println(edges);
+
 		KruskalAlgo result = new KruskalAlgo(edges);
 		ArrayList<Edge> msp = result.getMinimalSpanningTree();
 		int totalWeight = 0;
@@ -46,7 +47,27 @@ public class main {
 			totalWeight += e.weight;
 		}
 		System.out.println(totalWeight);
+		Long end = System.currentTimeMillis();
+		long total = end - start;
+		System.out.println("Took: " + total);
+		long parseTime = parsDone - start;
+		System.out.println("Parsing took: " + parseTime);
+	}
 
+	// Syracuse--"Springfield, MO" [1114]
+	private static void parse(String[] args) throws IOException {
+		FileReader fr = new FileReader(args[0]);
+		BufferedReader br = new BufferedReader(fr);
+		while (br.ready()) {
+			String line = br.readLine();
+			if (line.endsWith("]")) {
+				String[] split = line.split("--");
+				int blockStart = split[1].indexOf("[");
+				int weight = Integer.parseInt(split[1].substring(blockStart + 1, split[1].length() - 1));
+				split[1] = split[1].substring(0, blockStart - 1); // = toName
+				edges.add(new Edge(split[0], split[1], weight));
+			}
+		}
 	}
 
 }
